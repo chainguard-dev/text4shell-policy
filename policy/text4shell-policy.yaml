@@ -1,4 +1,4 @@
-apiVersion: policy.sigstore.dev/v1alpha1
+apiVersion: policy.sigstore.dev/v1beta1
 kind: ClusterImagePolicy
 metadata:
   name: vuln-cve-2022-42889-text4shell
@@ -8,10 +8,7 @@ spec:
   authorities:
   - name: sigstore
     keyless:
-        url: "https://fulcio.sigstore.dev"
-        identities:
-          - issuer: "*"
-            subject: "*"  
+      url: "https://fulcio.sigstore.dev"
     attestations:
     - predicateType: cyclonedx
       name: text4shellcyclonedx
