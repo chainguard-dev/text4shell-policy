@@ -1,0 +1,42 @@
+apiVersion: policy.sigstore.dev/v1alpha1
+kind: ClusterImagePolicy
+metadata:
+  name: vuln-cve-2022-42889-text4shell
+spec:
+  images:
+  - glob: "ghcr.io/chainguard-dev/*"
+  authorities:
+  - name: sigstore
+    keyless:
+        url: "https://fulcio.sigstore.dev"
+        identities:
+          - issuer: "*"
+            subject: "*"  
+    attestations:
+    - predicateType: cyclonedx
+      name: text4shellcyclonedx
+      policy:
+        type: cue
+        data: |
+          import (
+            "list"
+            "strings"
+          )
+
+          let text4shell_names = ["commons-text"]
+          let text4shell_versions = ["1.5", "1.6", "1.7", "1.8", "1.9"]
+
+          predicate: components: [...{
+            name:    name
+            version: version
+            if list.Contains(text4shell_names, name) &&
+              list.Contains(text4shell_versions, version) {
+              err: strings.Join([
+                "Error: CycloneDX SBOM contains package",
+                name, "version", version, "which is",
+                "vulnerable to text4shell (CVE-2022-42889)",
+              ], " ")
+              name: err
+            }
+          }]
+
