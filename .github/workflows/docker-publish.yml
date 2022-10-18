@@ -98,6 +98,6 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: "true"
-          run: cosign attest --type https://cyclonedx.org/schema --predicate target/bom.json ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
+        run: cosign attest --type https://cyclonedx.org/schema --predicate target/bom.json ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
   
       
