@@ -3,12 +3,12 @@ This demo shows how you can use Sigstore to validate your signed SBOMs against t
 
 ## Option 1: Check if your remote OCI image is affected using cue
 ```
-cosign verify-attestation --policy policy/text4shell.cue --type https://cyclonedx.org/schema ghcr.io/chainguard-dev/text4shell-policy:main@sha256:98b9a03b479ea567b2fbed8ffb0d46bb908425c9ea66f162bd026ce2ea1c403f
+cosign verify-attestation --policy policy/text4shell.cue --type https://cyclonedx.org/schema ghcr.io/chainguard-dev/text4shell-policy:main
 ```
 
 ## Option 2: Check your SBOM against with a local cue
 ```
-cosign download attestation ghcr.io/chainguard-dev/text4shell-policy:main@sha256:98b9a03b479ea567b2fbed8ffb0d46bb908425c9ea66f162bd026ce2ea1c403f | jq -r .payload | base64 -d | jq > sbom.json
+cosign download attestation ghcr.io/chainguard-dev/text4shell-policy:main | jq -r .payload | base64 -d | jq > sbom.json
 cue vet policy/text4shell.cue sbom.json
 ```
 
