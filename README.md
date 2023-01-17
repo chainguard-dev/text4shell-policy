@@ -1,18 +1,12 @@
 # Text4Shell Demo
 This demo shows how you can use Sigstore to validate your signed SBOMs against text4shell policies in Kubernetes or on the command line
 
-## Option 1: Check if your remote OCI image is affected using cue
+## Option 1: Check if your remote OCI image is affected using cue with cosign 2.0
 ```
-cosign verify-attestation --policy policy/text4shell.cue --type https://cyclonedx.org/schema ghcr.io/chainguard-dev/text4shell-policy:main
-```
-
-## Option 2: Check your SBOM against with a local cue
-```
-cosign download attestation ghcr.io/chainguard-dev/text4shell-policy:main | jq -r .payload | base64 -d | jq > sbom.json
-cue vet policy/text4shell.cue sbom.json
+cosign verify-attestation --policy policy/text4shell.cue --type https://cyclonedx.org/bom --certificate-identity-regexp=.* --certificate-oidc-issuer-regexp=.* ghcr.io/chainguard-dev/text4shell-policy:main
 ```
 
-## Option 3: Check using Enforce for Kubernetes with image built from this repo
+## Option 2: Check using Enforce for Kubernetes with image built from this repo
 ```
 chainctl policies create --group $DEMO_GROUP -f policy/text4shell-policy.yaml
 kubectl label ns default policy.sigstore.dev/include=true --overwrite
